@@ -7,7 +7,12 @@ import (
 )
 
 func HandleRequests() {
-	http.HandleFunc("/", controllers.Home)
-	http.HandleFunc("/api/personalities", controllers.GetAllPersonalities)
+	router := http.NewServeMux()
+
+	router.HandleFunc("/", controllers.Home)
+	router.HandleFunc("/api/personalities", controllers.GetAllPersonalities)
+
+	http.Handle("/", router)
+
 	log.Fatal(http.ListenAndServe(":8000", nil))
 }
