@@ -2,20 +2,18 @@ package main
 
 import (
 	"fmt"
-	"log"
-	"net/http"
+	"github.com/rdiego26/golang-simple-rest-api/models"
+	"github.com/rdiego26/golang-simple-rest-api/routes"
 )
 
-func Home(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Home Page")
-}
-
-func HandleRequests() {
-	http.HandleFunc("/", Home)
-	log.Fatal(http.ListenAndServe(":8000", nil))
-}
-
 func main() {
+	models.Personalities = []models.Personality{
+		models.Personality{ID: "1", Name: "Diego", History: "I am a software engineer"},
+		models.Personality{ID: "2", Name: "John", History: "I am a doctor"},
+		models.Personality{ID: "3", Name: "Jane", History: "I am a teacher"},
+		models.Personality{ID: "4", Name: "Doe", History: "I am a lawyer"},
+	}
+
 	fmt.Println("Initialising the application")
-	HandleRequests()
+	routes.HandleRequests()
 }
