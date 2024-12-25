@@ -26,3 +26,6 @@ go.work.sum
 
 # Idea
 .idea/
+
+# Compiled stuff
+golang-simple-rest-api
