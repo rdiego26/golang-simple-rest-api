@@ -33,15 +33,15 @@ func GetPersonality(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("Endpoint Hit: getPersonality")
 
 	vars := mux.Vars(r)
-	key := vars["id"]
-
-	fmt.Println("ID:", key)
+	id := vars["id"]
 
 	w.Header().Set("Content-Type", "application/json")
 
-	for _, personality := range models.Personalities {
-		if personality.ID == key {
-			json.NewEncoder(w).Encode(personality)
-		}
+	var personality models.Personality
+	database.DB.Where("id = ?", id).First(&personality)
+
+	err := json.NewEncoder(w).Encode(personality)
+	if err != nil {
+		http.Error(w, "Failed to encode personality", http.StatusInternalServerError)
 	}
 }
