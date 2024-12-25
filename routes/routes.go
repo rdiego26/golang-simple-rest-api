@@ -1,18 +1,18 @@
 package routes
 
 import (
+	"github.com/gorilla/mux"
 	"github.com/rdiego26/golang-simple-rest-api/controllers"
 	"log"
 	"net/http"
 )
 
 func HandleRequests() {
-	router := http.NewServeMux()
+	router := mux.NewRouter()
 
-	router.HandleFunc("/", controllers.Home)
-	router.HandleFunc("/api/personalities", controllers.GetAllPersonalities)
+	router.HandleFunc("/", controllers.Home).Methods("GET")
+	router.HandleFunc("/api/personalities", controllers.GetAllPersonalities).Methods("GET")
+	router.HandleFunc("/api/personalities/{id}", controllers.GetPersonality).Methods("GET")
 
-	http.Handle("/", router)
-
-	log.Fatal(http.ListenAndServe(":8000", nil))
+	log.Fatal(http.ListenAndServe(":8000", router))
 }
