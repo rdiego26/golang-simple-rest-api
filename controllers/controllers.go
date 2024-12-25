@@ -45,3 +45,21 @@ func GetPersonality(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Failed to encode personality", http.StatusInternalServerError)
 	}
 }
+
+func CreatePersonality(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("Endpoint Hit: createPersonality")
+
+	var personality models.Personality
+
+	err := json.NewDecoder(r.Body).Decode(&personality)
+	if err != nil {
+		http.Error(w, "Failed to decode personality", http.StatusInternalServerError)
+	}
+
+	database.DB.Create(&personality)
+
+	err = json.NewEncoder(w).Encode(personality)
+	if err != nil {
+		http.Error(w, "Failed to encode personality", http.StatusInternalServerError)
+	}
+}
