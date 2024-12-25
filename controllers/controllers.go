@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/gorilla/mux"
+	"github.com/rdiego26/golang-simple-rest-api/database"
 	"github.com/rdiego26/golang-simple-rest-api/models"
 	"net/http"
 )
@@ -16,9 +17,13 @@ func Home(w http.ResponseWriter, r *http.Request) {
 func GetAllPersonalities(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("Endpoint Hit: getAllPersonalities")
 
+	var personalities []models.Personality
+
 	w.Header().Set("Content-Type", "application/json")
 
-	err := json.NewEncoder(w).Encode(models.Personalities)
+	database.DB.Find(&personalities)
+
+	err := json.NewEncoder(w).Encode(personalities)
 	if err != nil {
 		http.Error(w, "Failed to encode personalities", http.StatusInternalServerError)
 	}
