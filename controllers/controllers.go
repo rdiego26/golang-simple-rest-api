@@ -40,6 +40,11 @@ func GetPersonality(w http.ResponseWriter, r *http.Request) {
 	var personality models.Personality
 	database.DB.Where("id = ?", id).First(&personality)
 
+	if personality.ID == "" {
+		http.Error(w, "Personality not found", http.StatusNotFound)
+		return
+	}
+
 	err := json.NewEncoder(w).Encode(personality)
 	if err != nil {
 		http.Error(w, "Failed to encode personality", http.StatusInternalServerError)
@@ -51,6 +56,8 @@ func CreatePersonality(w http.ResponseWriter, r *http.Request) {
 
 	var personality models.Personality
 
+	w.Header().Set("Content-Type", "application/json")
+
 	err := json.NewDecoder(r.Body).Decode(&personality)
 	if err != nil {
 		http.Error(w, "Failed to decode personality", http.StatusInternalServerError)
@@ -59,6 +66,29 @@ func CreatePersonality(w http.ResponseWriter, r *http.Request) {
 	database.DB.Create(&personality)
 
 	err = json.NewEncoder(w).Encode(personality)
+	if err != nil {
+		http.Error(w, "Failed to encode personality", http.StatusInternalServerError)
+	}
+}
+
+func DeletePersonality(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("Endpoint Hit: deletePersonality")
+
+	vars := mux.Vars(r)
+	id := vars["id"]
+
+	var personality models.Personality
+	database.DB.Where("id = ?", id).First(&personality)
+
+	if personality.ID == "" {
+		http.Error(w, "Personality not found", http.StatusNotFound)
+		return
+	}
+
+	database.DB.Delete(&personality)
+
+	w.Header().Set("Content-Type", "application/json")
+	err := json.NewEncoder(w).Encode(personality)
 	if err != nil {
 		http.Error(w, "Failed to encode personality", http.StatusInternalServerError)
 	}
