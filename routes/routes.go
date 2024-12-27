@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 	"github.com/rdiego26/golang-simple-rest-api/controllers"
 	"github.com/rdiego26/golang-simple-rest-api/middlewares"
@@ -20,5 +21,5 @@ func HandleRequests() {
 	router.HandleFunc("/api/personalities/{id}", controllers.DeletePersonality).Methods("DELETE")
 	router.HandleFunc("/api/personalities/{id}", controllers.EditPersonality).Methods("PUT")
 
-	log.Fatal(http.ListenAndServe(":8000", router))
+	log.Fatal(http.ListenAndServe(":8000", handlers.CORS(handlers.AllowedOrigins([]string{"*"}))(router)))
 }
