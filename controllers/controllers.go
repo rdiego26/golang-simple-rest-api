@@ -19,8 +19,6 @@ func GetAllPersonalities(w http.ResponseWriter, r *http.Request) {
 
 	var personalities []models.Personality
 
-	w.Header().Set("Content-Type", "application/json")
-
 	database.DB.Find(&personalities)
 
 	err := json.NewEncoder(w).Encode(personalities)
@@ -34,8 +32,6 @@ func GetPersonality(w http.ResponseWriter, r *http.Request) {
 
 	vars := mux.Vars(r)
 	id := vars["id"]
-
-	w.Header().Set("Content-Type", "application/json")
 
 	var personality models.Personality
 	database.DB.Where("id = ?", id).First(&personality)
@@ -55,8 +51,6 @@ func CreatePersonality(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("Endpoint Hit: createPersonality")
 
 	var personality models.Personality
-
-	w.Header().Set("Content-Type", "application/json")
 
 	err := json.NewDecoder(r.Body).Decode(&personality)
 	if err != nil {
@@ -87,7 +81,6 @@ func DeletePersonality(w http.ResponseWriter, r *http.Request) {
 
 	database.DB.Delete(&personality)
 
-	w.Header().Set("Content-Type", "application/json")
 	err := json.NewEncoder(w).Encode(personality)
 	if err != nil {
 		http.Error(w, "Failed to encode personality", http.StatusInternalServerError)
