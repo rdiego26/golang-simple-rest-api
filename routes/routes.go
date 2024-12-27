@@ -15,6 +15,7 @@ func HandleRequests() {
 	router.HandleFunc("/api/personalities", controllers.CreatePersonality).Methods("POST")
 	router.HandleFunc("/api/personalities/{id}", controllers.GetPersonality).Methods("GET")
 	router.HandleFunc("/api/personalities/{id}", controllers.DeletePersonality).Methods("DELETE")
+	router.HandleFunc("/api/personalities/{id}", controllers.EditPersonality).Methods("PUT")
 
 	log.Fatal(http.ListenAndServe(":8000", router))
 }

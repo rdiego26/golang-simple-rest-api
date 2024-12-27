@@ -93,3 +93,35 @@ func DeletePersonality(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Failed to encode personality", http.StatusInternalServerError)
 	}
 }
+
+func EditPersonality(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("Endpoint Hit: editPersonality")
+
+	vars := mux.Vars(r)
+	id := vars["id"]
+
+	var personality models.Personality
+	database.DB.Where("id = ?", id).First(&personality)
+
+	if personality.ID == "" {
+		http.Error(w, "Personality not found", http.StatusNotFound)
+		return
+	}
+
+	var updatedPersonality models.Personality
+	err := json.NewDecoder(r.Body).Decode(&updatedPersonality)
+	if err != nil {
+		http.Error(w, "Failed to decode personality", http.StatusInternalServerError)
+	}
+
+	personality.Name = updatedPersonality.Name
+	personality.History = updatedPersonality.History
+
+	database.DB.Save(&personality)
+
+	w.Header().Set("Content-Type", "application/json")
+	err = json.NewEncoder(w).Encode(personality)
+	if err != nil {
+		http.Error(w, "Failed to encode personality", http.StatusInternalServerError)
+	}
+}
